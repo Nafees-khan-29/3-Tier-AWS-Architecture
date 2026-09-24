@@ -46,10 +46,10 @@ The system securely serves a Node.js frontend and a Go REST API using isolated V
 
 The project is deliberately structured to separate application logic from cloud infrastructure, mirroring enterprise monorepo patterns.
 
-*   `/terraform-infra`: Reusable Terraform modules (`vpc`, `alb`, `rds`, `iam`, etc.) and environment-specific configurations (`/environments/dev`)[cite: 1].
-*   `/backend`: Go REST API source code, dependency definitions (`go.mod`), and multi-stage `Dockerfile`[cite: 1].
-*   `/frontend`: Node.js presentation layer, static assets, and optimized `Dockerfile`[cite: 1].
-*   `/docker-local-deployment`: Docker Compose configuration (`docker-compose.yml`) and database initialization scripts for zero-cost local development[cite: 1].
+*   `/terraform-infra`: Reusable Terraform modules (`vpc`, `alb`, `rds`, `iam`, etc.) and environment-specific configurations (`/environments/dev`).
+*   `/backend`: Go REST API source code, dependency definitions (`go.mod`), and multi-stage `Dockerfile`.
+*   `/frontend`: Node.js presentation layer, static assets, and optimized `Dockerfile`.
+*   `/docker-local-deployment`: Docker Compose configuration (`docker-compose.yml`) and database initialization scripts for zero-cost local development.
 *   `/.github/workflows`: CI/CD automation pipelines for container image delivery.
 
 ---
@@ -57,7 +57,7 @@ The project is deliberately structured to separate application logic from cloud 
 ## 🚀 Deployment Lifecycle
 
 ### Local Environment
-Developers can spin up the entire application stack locally using Docker Compose without requiring AWS credentials or incurring cloud costs[cite: 1].
+Developers can spin up the entire application stack locally using Docker Compose without requiring AWS credentials or incurring cloud costs.
 ```bash
 cd docker-local-deployment
 docker compose up -d
@@ -65,7 +65,7 @@ docker compose up -d
 AWS Cloud Environment
 Continuous Integration: Merging application code to the main branch triggers a GitHub Actions workflow. This builds the Docker images, applies an immutable Git commit SHA tag, and pushes the artifacts to the container registry.
 
-Infrastructure Provisioning: Terraform initializes and applies the modular infrastructure state[cite: 1]. Shell scripts (deploy.sh, backend_user_data.sh) are maintained in the repository for bootstrapping and local testing[cite: 1].
+Infrastructure Provisioning: Terraform initializes and applies the modular infrastructure state[cite: 1]. Shell scripts (deploy.sh, backend_user_data.sh) are maintained in the repository for bootstrapping and local testing.
 
 
 cd terraform-infra/environments/dev
@@ -77,11 +77,11 @@ Zero-Downtime Updates: To deploy a new application version, an ASG Instance Refr
 📈 Enterprise Hardening Roadmap
 While this project successfully demonstrates advanced cloud architecture, migrating this specific implementation to a production-grade enterprise environment would require the following architectural evolutions:
 
-Immutable Machine Images: Transitioning away from runtime EC2 user_data bootstrapping[cite: 1] toward using HashiCorp Packer to bake Docker, the AWS CLI, and security agents into an immutable AMI, significantly reducing ASG spin-up latency.
+Immutable Machine Images: Transitioning away from runtime EC2 user_data bootstrapping toward using HashiCorp Packer to bake Docker, the AWS CLI, and security agents into an immutable AMI, significantly reducing ASG spin-up latency.
 
-Remote State Management: Migrating the local Terraform state to a remote backend (AWS S3) with state locking (DynamoDB) to facilitate safe, multi-developer collaboration and CI/CD infrastructure automation[cite: 1].
+Remote State Management: Migrating the local Terraform state to a remote backend (AWS S3) with state locking (DynamoDB) to facilitate safe, multi-developer collaboration and CI/CD infrastructure automation.
 
-Secret Injection: Evolving the current AWS Secrets Manager integration from environment variable population[cite: 1] to direct in-memory secret injection via AWS Parameter Store or HashiCorp Vault to prevent credential exposure via container inspection.
+Secret Injection: Evolving the current AWS Secrets Manager integration from environment variable population to direct in-memory secret injection via AWS Parameter Store or HashiCorp Vault to prevent credential exposure via container inspection.
 
 Private Artifact Registries: Shifting from public Docker Hub distribution to Amazon Elastic Container Registry (ECR), utilizing VPC endpoints to keep all image pulls completely within the private AWS backbone.
 
